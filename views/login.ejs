@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page / Registration Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="/assets/js/login.js"></script>
+</head>
+<body>
+    <div id="wrapper">
+        <form action="/login" id="login_form" method="POST" >
+            <input type="text" name="email_address" value="cpadua@village88.com">
+            <input type="password" name="password">
+            <input type="submit" value="Login">
+        </form>
+        <br />
+        <form action="/register" id="registration_form" method="POST">
+            <input type="text" name="first_name" value="Chris">
+            <input type="text" name="last_name" value="Padua">
+            <input type="text" name="email_address" value="cpadua@village88.com">
+            <input type="password" name="password" value="">
+            <input type="submit" value="Register">
+        </form>
+    </div>
+</body>
+</html>
