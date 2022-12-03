@@ -1,9 +1,13 @@
 $(document).ready( () => {
     $("#login_form").on("submit", function(){
         let form = $(this);
-
-        $.post(form.attr("action"), $(form).serialize(), (data) => {
-            window.location = "/wall"
+        $.post(form.attr("action"), $(form).serialize(), (data) => {     
+            if(data.errors !==  undefined){
+                 $("#login_errors").html(data.errors);
+            }
+            else{
+                window.location = "/wall";
+            }
         }, "json");
 
         return false;
@@ -11,13 +15,12 @@ $(document).ready( () => {
 
     $("#registration_form").on("submit", function(){
         let form = $(this);
-
-        $.post(form.attr("action"), $(form).serialize(), (data) => {
-            if(data.status){
-                location.reload();
+        $.post(form.attr("action"), $(form).serialize(), (data) => {            
+            if(data.errors !== undefined){
+                $("#register_errors").html(data.errors);
             }
             else{
-                alert(data.error);
+                location.reload();
             }
         }, "json");
 

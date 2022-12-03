@@ -1,0 +1,57 @@
+h1{
+    margin: 0px;
+    padding: 0px;
+}
+h4{
+    margin: 0px;
+    padding: 0xp;
+}
+header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid black;
+    padding: 0px 10px;
+}
+header p{
+    display: inline-block;
+    margin-right: 25px;
+}
+#content{
+    padding: 0px 60px;
+}
+    #post_writer textarea{
+        width: 100%;
+        height: 55px;
+        margin-bottom: 8px;
+        box-sizing: border-box;
+    }
+    #post_writer input[type="submit"]{
+        display: block;
+        margin-left: auto;
+    }
+
+    .message p{
+        margin-left: 25px;
+    }
+    .message input[type="submit"]{
+        display: block;
+        margin-left: auto;
+    }
+    .message .comment{
+        margin-left: 25px;
+    }
+    .message .inside_comment{
+        margin-left: 25px;
+    }
+        .message .inside_comment textarea{
+            width: 100%;
+            height: 55px;
+            margin-bottom: 8px;
+            box-sizing: border-box;
+        }
+
+#message_errors, .comment_errors p{
+    color: red;
+    margin: 15px 0px;
+}

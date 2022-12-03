@@ -5,7 +5,6 @@ const Session    = require('express-session');
 
 const Constants  = require('./configs/constants');
 const App        = Express();
-
 const WallRoutes = require("./routes/wall.route");
 
 App.use(BodyParser.json({limit: '50mb'}));
@@ -20,6 +19,7 @@ App.use(Session({
     saveUninitialized: true,
     cookie: {secure: false }
 }));
+
 
 App.use("/", WallRoutes);
 

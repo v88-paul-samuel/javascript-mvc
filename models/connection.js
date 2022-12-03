@@ -2,6 +2,7 @@ const Mysql     = require("mysql");
 const Constants = require("../configs/constants");
 
 const DBconnection = Mysql.createPool(Constants.DATABASE);
+const format = Mysql.format;
 
 DBconnection.executeQuery = async (query) => {
     return new Promise((resolve, reject) => {
@@ -21,4 +22,4 @@ DBconnection.executeQuery = async (query) => {
     });
 }
 
-module.exports = DBconnection;
+module.exports = {DBconnection : DBconnection, 'format' : format};
