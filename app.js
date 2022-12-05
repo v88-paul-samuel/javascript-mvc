@@ -1,12 +1,14 @@
-const BodyParser = require('body-parser');
-const Express    = require('express');
-const Path       = require('path');
-const Session    = require('express-session');
+import BodyParser from 'body-parser';
+import Express from 'express';
+import Path from 'path';
+import Session from 'express-session';
+import Constants from './configs/constants.js';
+const App = Express();
 
-const Constants  = require('./configs/constants');
-const App        = Express();
-
-const WallRoutes = require("./routes/wall.route");
+import WallRoutes from "./routes/wall.route.js";
+import {fileURLToPath} from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = Path.dirname(__filename);
 
 App.use(BodyParser.json({limit: '50mb'}));
 App.use(BodyParser.urlencoded({limit: '50mb', extended: true}));
