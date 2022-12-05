@@ -11,4 +11,4 @@ constant.DATABASE = {
     port: "3308"
 }
 
-module.exports = constant;
+export default constant;

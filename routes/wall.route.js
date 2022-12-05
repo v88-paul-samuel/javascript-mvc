@@ -1,7 +1,7 @@
-const { Router }     = require("express");
-const ViewController = require("../controllers/view.controller");
-const WallController = require("../controllers/wall.controller");
-const validateUser = require("../helpers/validator.js");
+import { Router } from "express";
+import ViewController from "../controllers/view.controller.js";
+import WallController from "../controllers/wall.controller.js";
+import validateUser from "../helpers/validator.js";
 const WallRoute = Router();
 
 
@@ -17,4 +17,4 @@ WallRoute.post("/postComment", validateUser.postComment, (req, res) => { new Wal
 WallRoute.post("/deleteComment", (req, res) => { new WallController(req, res).deleteComment(); } )
 WallRoute.post("/deleteMessage", (req, res) => { new WallController(req, res).deleteMessage(); })
 
-module.exports = WallRoute;
+export default WallRoute;

@@ -1,6 +1,6 @@
-const WallModel = require("../models/wall.model");
-const { validationResult } = require('express-validator');
-const wallModel = require("../models/wall.model");
+import WallModel from "../models/wall.model.js";
+import { validationResult } from "express-validator";
+import wallModel from "../models/wall.model.js";
 
 class WallController{
     #req;
@@ -63,4 +63,4 @@ class WallController{
     }
 }
 
-module.exports = WallController;
+export default WallController;

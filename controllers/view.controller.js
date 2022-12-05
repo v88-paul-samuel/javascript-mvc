@@ -1,5 +1,5 @@
-const UserModel =  require("../models/users.model");
-const { validationResult } = require('express-validator');
+import UserModel from "../models/users.model.js";
+import { validationResult } from 'express-validator';
 
 class ViewController {
     #req;
@@ -63,4 +63,4 @@ class ViewController {
     }
 }
 
-module.exports = ViewController;
+export default ViewController;

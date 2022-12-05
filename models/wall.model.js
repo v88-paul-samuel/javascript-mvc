@@ -1,6 +1,6 @@
-const dbs = require("./connection");
-const moment = require("moment/moment");
-const constant_helper = require("../helpers/constants");
+import dbs from "./connection.js";
+import moment from "moment/moment.js";
+import constant_helper from "../helpers/constants.js";
 
 class Wall{
     months;
@@ -185,4 +185,4 @@ class Wall{
     }
 }
 
-module.exports = new Wall();
+export default new Wall();

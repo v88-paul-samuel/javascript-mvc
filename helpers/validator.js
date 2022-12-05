@@ -1,6 +1,6 @@
-const { body } = require('express-validator');
+import { body } from 'express-validator';
 
-module.exports = {
+export default {
     login: [
         body('email_address').trim().notEmpty().withMessage('Email Address is required')
             .isEmail().withMessage('Must be a valid Email').normalizeEmail().escape(),

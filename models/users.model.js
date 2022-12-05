@@ -1,6 +1,6 @@
-const md5 = require("md5");
-const moment = require("moment/moment");
-const dbs = require("./connection");
+import md5 from "md5";
+import moment from "moment/moment.js";
+import dbs from "./connection.js";
 
 /**
  * @class
@@ -81,14 +81,14 @@ class User{
     hasEmail = async (email) => {
         let response_data = {status: false, result: {}, err: null};
         let query = dbs.format(`
-                SELECT * 
+                SELECT COUNT(id) as number 
                 FROM users 
                 WHERE email = ?`, [email]);
 
         response_data = await dbs.DBconnection.executeQuery(query);
-        return response_data.result.length === 0;
+        return response_data.result[0]["number"] === 0;
     }
 
 }
 
-module.exports = new User();
+export default new User();
