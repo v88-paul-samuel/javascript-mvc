@@ -1,5 +1,5 @@
 import UserModel from "../models/user.model.js";
-import { validationResult } from 'express-validator';
+import { validationResult } from "express-validator";
 
 class ViewController {
     #req;

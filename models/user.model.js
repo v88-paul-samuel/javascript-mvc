@@ -65,7 +65,7 @@ class User{
     htmlErrors = (errors = []) => {
         let result = [];
         for(let e in errors){
-            result.push("<p>" + errors[e].msg + "</p>");
+            result.push(`<p>${errors[e].msg}</p>`);
         }
 
         return result;
