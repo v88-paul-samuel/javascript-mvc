@@ -5,27 +5,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page / Registration Page</title>
-    <link rel="stylesheet" type="text/css" href="/assets/styles/login.css"/>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/styles/login.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="/assets/js/login.js"></script>
 </head>
 <body>
     <div id="wrapper">
+        <h1>Login</h1>
         <div id="login_errors">
         </div>
         <form action="/login" id="login_form" method="POST" >
-            <input type="text" name="email_address" value="cpadua@village88.com">
-            <input type="password" name="password">
+            <label>Email-address</label>
+                <input type="text" name="email_address" value="cpadua@village88.com" placeholder="Email-address">    
+            <label>Password</label>
+                <input type="password" name="password" placeholder="Password">            
             <input type="submit" value="Login">
         </form>
         <br />
+        <h1>Register</h1>
         <div id="register_errors">            
         </div>
         <form action="/register" id="registration_form" method="POST">
-            <input type="text" name="first_name" value="Chris">
-            <input type="text" name="last_name" value="Padua">
-            <input type="text" name="email_address" value="cpadua@village88.com">
-            <input type="password" name="password" value="">
+            <label for="first_name">First Name:</label>
+                <input type="text" name="first_name" value="Chris" placeholder="First Name">            
+            <label for="last_name">Last Name:</label>
+                <input type="text" name="last_name" value="Padua" placeholder="Last Name">            
+            <label for="email_address">Email-address:</label>                 
+                <input type="text" name="email_address" value="cpadua@village88.com" placeholder="Email Address">            
+            <label for="password">Password:</label>                
+                <input type="password" name="password" value="" placeholder="Password">            
             <input type="submit" value="Register">
         </form>
     </div>

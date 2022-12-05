@@ -12,9 +12,9 @@ WallRoute.post("/login", validateUser.login, (req, res) => { new ViewController(
 WallRoute.post("/register", validateUser.register,  (req, res) => { new ViewController(req, res).register(); })
 
 WallRoute.get("/wall", (req, res) => { new WallController(req, res).wall(); })
-WallRoute.post("/post_message", validateUser.post_message, (req, res) => { new WallController(req, res).post_message(); })
-WallRoute.post("/post_comment", validateUser.post_comment, (req, res) => { new WallController(req, res).post_comment(); })
-WallRoute.post("/delete_comment", (req, res) => { new WallController(req, res).delete_comment(); } )
-WallRoute.post("/delete_message", (req, res) => { new WallController(req, res).delete_message(); })
+WallRoute.post("/postMessage", validateUser.postMessage, (req, res) => { new WallController(req, res).postMessage(); })
+WallRoute.post("/postComment", validateUser.postComment, (req, res) => { new WallController(req, res).postComment(); })
+WallRoute.post("/deleteComment", (req, res) => { new WallController(req, res).deleteComment(); } )
+WallRoute.post("/deleteMessage", (req, res) => { new WallController(req, res).deleteMessage(); })
 
 module.exports = WallRoute;

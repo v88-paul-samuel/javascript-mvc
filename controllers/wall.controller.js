@@ -17,48 +17,48 @@ class WallController{
             this.#res.redirect("/homepage")
         }
         else{
-            let fetched_contents = await WallModel.organized_content();
-            this.#res.render("wall.ejs", {user : user_details, fetched_contents : fetched_contents});
+            let fetched_contents = await WallModel.organizedContent();
+            this.#res.render("wall.ejs", {user_details, fetched_contents});
         }
     }
     
-    post_message = async () => {
-        let error_list = wallModel.html_errors(validationResult(this.#req).errors);
+    postMessage = async () => {
+        let error_list = wallModel.htmlErrors(validationResult(this.#req).errors);
         if(error_list.length > 0){
             this.#res.json({errors : error_list});
         }
         else{
             let user_details = this.#req.session.user;   
             let post_details = this.#req.body;        
-            WallModel.create_message(user_details, post_details);   
+            WallModel.createMessage(user_details, post_details);   
             this.#res.json({});   
         }     
     }
 
-    delete_message = async () => {
+    deleteMessage = async () => {
         let user_details = this.#req.session.user;
         let post_details = this.#req.body;
-        WallModel.delete_message(user_details, post_details["messages_id"]);
+        WallModel.deleteMessage(user_details["id"], post_details["messages_id"]);
         this.#res.redirect("/wall");
     }
 
-    post_comment = async () => {
-        let error_list = wallModel.html_errors(validationResult(this.#req).errors);
+    postComment = async () => {
+        let error_list = wallModel.htmlErrors(validationResult(this.#req).errors);
         if(error_list.length > 0){
             this.#res.json({errors : error_list});
         }
         else{
             let user_details = this.#req.session.user;   
             let post_details = this.#req.body;
-            WallModel.create_comment(user_details, post_details);
+            WallModel.createComment(user_details, post_details);
             this.#res.json({});
         }
     }
 
-    delete_comment = async () => {
+    deleteComment = async () => {
         let user_details = this.#req.session.user;
         let post_details = this.#req.body;
-        WallModel.delete_comment(user_details, post_details["comments_id"]);
+        WallModel.deleteComment(user_details["id"], post_details["comments_id"]);
         this.#res.redirect("/wall");
     }
 }

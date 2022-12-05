@@ -1,45 +1,68 @@
 const md5 = require("md5");
-const moment = require("moment/moment.js");
-const dbs = require("./connection.js");
+const moment = require("moment/moment");
+const dbs = require("./connection");
 
-
+/**
+ * @class
+ * Class representing User Model
+ */
 class User{
-    get_all_users = async () => {
-        return await dbs.DBconnection.executeQuery ("SELECT * FROM users");
-    }
-
-    get_one_user = async (user_details) => {
-        let query = dbs.format("SELECT * FROM users WHERE email = ?", user_details["email_address"]);
-        let user = await dbs.DBconnection.executeQuery(query);
-        if(user.result.length === 0){
-            return "invalid";
+    /**
+     * DOCU: get one user from the database 
+     * Triggered by 'login' in view.controller.js
+     * @param {object} user_details 
+     * @returns {object} the user details {id: string, first_name: string, last_name: string, email: string, password: string, created_at: string, updated_at: string}
+     * @author Paul Samuel Lacap
+     */
+    getOneUser = async ({email_address, password}) => {
+        let response_data = {status: false, result: {}, err: null};
+        let query = dbs.format(`
+                SELECT * 
+                FROM users 
+                WHERE email = ?`, [email_address]
+        );
+        
+        response_data = await dbs.DBconnection.executeQuery(query);
+        
+        if(md5(password) !== response_data.result[0]?.password){
+            return [];            
         }
-        else{
-            let encrypted_password = md5(user_details["password"]);
-            if(encrypted_password !== user.result[0].password){
-                return "invalid";
-            }
-            return user.result[0];
-        }
-        return; 
+
+        return response_data.result; 
     }
 
-    add_user = async (user_details = "") => {
-        let encrypted_password = md5(user_details['password']);
-        let query = dbs.format(`INSERT users(first_name, last_name, email, password, created_at, updated_at) 
-                                VALUES(?,?,?,?,?,?)`, 
-                                [user_details["first_name"], 
-                                user_details["last_name"] , 
-                                user_details["email_address"],
-                                encrypted_password,
-                                moment().format('YYYY-MM-DD HH:mm:ss'),
-                                moment().format('YYYY-MM-DD HH:mm:ss')
-                            ]);
+    /**
+     * DOCU: Add one user to the database
+     * Triggered by: "register" in view.controller.js* 
+     * @param {object} user_details=""
+     * @returns {object} the response data
+     * @author Paul Samuel Lacap
+     */
+    addUser = async ({email_address, first_name, last_name, password}) => {
+        let response_data = {status: false, result: {}, err: null};
+        let query = dbs.format(`
+                INSERT users(first_name, last_name, email, password, created_at, updated_at) 
+                    VALUES(?,?,?,?,?,?)`, [
+                        first_name, 
+                        last_name, 
+                        email_address,
+                        md5(password),
+                        moment().format('YYYY-MM-DD HH:mm:ss'),
+                        moment().format('YYYY-MM-DD HH:mm:ss')
+                    ]);
+        
+        response_data = await dbs.DBconnection.executeQuery(query)
 
-        return await dbs.DBconnection.executeQuery(query);
+        return response_data.result;      
     }
 
-    html_errors = (errors = []) => {
+    /**
+     * DOCU: Organized the validation errors for display
+     * @param {array} errors=[]
+     * @returns {array} an array of error messages in <p></p> tags
+     * @author Paul Samuel Lacap
+     */
+    htmlErrors = (errors = []) => {
         let result = [];
         for(let e in errors){
             result.push("<p>" + errors[e].msg + "</p>");
@@ -48,10 +71,22 @@ class User{
         return result;
     }
 
-    check_email = async (email) => {
-        let query = dbs.format("SELECT * FROM users WHERE email = ?", email);
-        let user = await dbs.DBconnection.executeQuery(query);
-        return user.result.length === 0;
+    /**
+     * DOCU: Checks if an email already registered
+     * Triggered by "register" in view.controller.js
+     * @param {string} email 
+     * @returns {int} 0 if no email is found and > 0 otherwise
+     * @author Paul Samuel Lacap
+     */
+    hasEmail = async (email) => {
+        let response_data = {status: false, result: {}, err: null};
+        let query = dbs.format(`
+                SELECT * 
+                FROM users 
+                WHERE email = ?`, [email]);
+
+        response_data = await dbs.DBconnection.executeQuery(query);
+        return response_data.result.length === 0;
     }
 
 }

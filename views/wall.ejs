@@ -11,7 +11,7 @@
         <header>
             <h1>CodingDojoWall</h1>
             <div>
-                <p>Welcome <%= user["first_name"] %> </p>
+                <p>Welcome <%= user_details["first_name"] %> </p>
                 <a href="/logoff">log off</a>
             </div>
         </header>
@@ -20,7 +20,7 @@
                 <h2>Post a message</h2>
                 <div id="message_errors">                
                 </div>
-                <form id="main_poster" action="/post_message" method="post">
+                <form id="main_poster" action="/postMessage" method="post">
                     <textarea name="message_box"></textarea>
                     <input type="submit" value="Post a message" />                
                 </form>
@@ -30,8 +30,8 @@
             <div class="message">
                 <h4><%= message["first_name"] %> <%=message["last_name"] %> - <%=message["created_at"]%> </h4>
                 <p><%= message["message"] %></p>  
-<% if(user["id"] === message["user_id"]){ %>                
-                <form class="delete_form" action="/delete_message" method="POST">
+<% if(user_details["id"] === message["user_id"]){ %>                
+                <form class="delete_form" action="/deleteMessage" method="POST">
                     <input type="hidden" name="messages_id" value="<%=message["messages_id"]%>" />
                     <input type="submit" value="Delete message" />
                 </form>  
@@ -42,8 +42,8 @@
                     <h4><%= comment["first_name"] %> <%=comment["last_name"] %> - <%=comment["created_at"] %> </h4>
                     <p><%= comment["comment"] %></p>                    
                 </div>
-<%          if(user["id"] === comment["user_id"]){ %>
-                <form class="delete_form" action="/delete_comment" method="POST">
+<%          if(user_details["id"] === comment["user_id"]){ %>
+                <form class="delete_form" action="/deleteComment" method="POST">
                     <input type="hidden" name="comments_id" value="<%=comment["comments_id"]%>"/>
                     <input type="submit" value="Delete Comment" />
                 </form>
@@ -53,7 +53,7 @@
                 <h3>Post a Comment</h3>
                 <div class="comment_errors">                
                 </div>
-                <form action="/post_comment" method="POST">
+                <form action="/postComment" method="POST">
                     <input type="hidden" name="message_id" value="<%= fetched_contents[key]["messages_id"] %>" />
                     <textarea name="comment_box" placeholder="Insert Comment Here"></textarea>
                     <input class="post_button" type="submit" value="Post a comment" />

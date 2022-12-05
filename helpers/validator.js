@@ -13,10 +13,10 @@ module.exports = {
             .isEmail().withMessage('Must be a valid Email').normalizeEmail().escape(),
         body('password').trim().isLength({min:3}).withMessage('Invalid Password Entry').escape()
     ],
-    post_message: [
+    postMessage: [
         body('message_box').trim().notEmpty().withMessage("Empty Messages are not allowed").escape()
     ],
-    post_comment: [
+    postComment: [
         body('comment_box').trim().notEmpty().withMessage('Empty Comments are not allowed').escape()
     ]
 };
