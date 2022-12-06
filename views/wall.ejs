@@ -36,7 +36,8 @@
                     <input type="submit" value="Delete message" />
                 </form>  
 <% } %>
-<%      for(let inner_key in message["comments"]){ 
+<%  if(message["comments"][0] !== null){
+        for(let inner_key in message["comments"]){ 
                 let comment = fetched_contents[key]["comments"][inner_key] %>
                 <div class="comment">
                     <h4><%= comment["first_name"] %> <%=comment["last_name"] %> - <%=comment["created_at"] %> </h4>
@@ -48,7 +49,8 @@
                     <input type="submit" value="Delete Comment" />
                 </form>
         <% } %>
-<%      } %>  
+<%      }
+    } %>  
             <div class="inside_comment">            
                 <h3>Post a Comment</h3>
                 <div class="comment_errors">                

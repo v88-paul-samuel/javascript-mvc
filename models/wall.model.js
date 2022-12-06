@@ -127,33 +127,60 @@ class Wall{
     }
 
     organizedContent = async () => {
-        let fetched_messages = await this.getAllMessage();
-        let fetched_comments = await this.getAllComments();
+        let response_data = {status : false, result : {}, err : null}
+        let query = dbs.format(`
+                SELECT
+                    messages.id as messages_id, messages.user_id as user_id, message, messages.created_at as messages_created_at,  
+                    users.first_name as messages_first_name, users.last_name as messages_last_name,
+                    named_comments.id as comments_id, named_comments.user_id as comments_user_id, named_comments.comment, named_comments.first_name as comments_first_name, named_comments.last_name as comments_last_name, named_comments.created_at as comments_created_at
+                FROM messages
+                INNER JOIN users ON users.id = messages.user_id
+                LEFT JOIN (
+                    SELECT c.id, c.user_id, c.message_id, c.comment, u.first_name, u.last_name, c.created_at
+                    FROM comments as c
+                    INNER JOIN users as u ON c.user_id = u.id 
+                ) as named_comments ON messages.id = named_comments.message_id
+                ORDER BY messages_created_at DESC, comments_created_at ASC
+        `)
 
-        /* 
-            Groups together the comments with respect to their message_id and organizes them into 
-            and an object where the key is the message_id
-        */
-        let organized_comments = {};
-        for(let comment of fetched_comments){
-            if(organized_comments[comment["message_id"]] === undefined){
-                organized_comments[comment["message_id"]] = [];
+        response_data = await dbs.DBconnection.executeQuery(query);
+        
+        let fetched_contents = response_data.result;
+        let organized_content = [];
+        for(let key in fetched_contents){
+            let cur = fetched_contents[key];
+            let comment_value = null;  
+            if(cur.comments_id !== null){            
+                comment_value = 
+                    {
+                        comments_id : cur.comments_id,
+                        user_id : cur.comments_user_id,
+                        first_name : cur.comments_first_name,
+                        last_name : cur.comments_last_name, 
+                        comment : cur.comment,
+                        created_at : this.dateFormatter(cur.comments_created_at)
+                    }
             }
-            organized_comments[comment["message_id"]].push(comment);
-        }
-
-        /* Adds the organized comments to its respective message */
-        for(let key in fetched_messages){                            
-            if(organized_comments[fetched_messages[key]["messages_id"]] !== undefined){
-                fetched_messages[key]["comments"] ??= [];
-                fetched_messages[key]["comments"] = organized_comments[fetched_messages[key]["messages_id"]];
+            let oc_key = organized_content.length - 1;
+            if(key === "0" || (cur.messages_id !== organized_content[oc_key]["messages_id"])){
+                organized_content.push(
+                    {
+                        messages_id : cur.messages_id, 
+                        user_id : cur.user_id,
+                        message : cur.message, 
+                        first_name : cur.messages_first_name,
+                        last_name : cur.messages_last_name,
+                        comments : [comment_value],
+                        created_at : this.dateFormatter(cur.messages_created_at)
+                    }
+                );
             }
             else{
-                fetched_messages[key]["comments"] = [];
+                organized_content[oc_key]["comments"].push(comment_value)
             }
         }
-        
-        return fetched_messages;
+
+         return organized_content;
     }
 
     htmlErrors = (errors = []) => {
@@ -166,6 +193,9 @@ class Wall{
     }
 
     dateFormatter = (my_date) => {
+        if(my_date === null){
+            return null;
+        }
         let day = my_date.getDate();
 
         if(day === 1){
