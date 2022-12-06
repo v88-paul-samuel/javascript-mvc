@@ -36,7 +36,6 @@ class ViewController {
                 this.#res.json({status : this.#req.session.user});
             }
         }
-
     }
 
     logoff = async () => {

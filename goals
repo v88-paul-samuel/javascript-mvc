@@ -1,0 +1,25 @@
+Michael notes:
+Requirements for back-end engineers (optional for front-end)
+1) You are not allowed to copy and paste any codes.  You must type everything from scratch.
+
+2) Build out all the wall features: 
+    - including posting a wall message 
+    - adding a response 
+    -  as well as deleting a post or a response that you've posted.  
+    - Add proper validation rules.
+
+3.) Add basic securities (only allowing posts/respones that you've written to be deleted, only allowing certain pages to be seen for logged in users, etc)
+
+4.) You must use the docker built in debugger tool.  No console.log or print statements.  Use the built in debugger to debug.  This will save you tons of time in the real development environment.
+
+5.) Record your work and upload to Youtube (make it unlisted).  This way, others can also see your work flow and learn from it (especially junior developers).
+
+6.) Don't be shy.  Repeat multiple times and upload your best work for the month.  One submission is due before the end of October, another before the end of November, and another before the end of December.
+
+Simpler The Wall Activity
+1. DB Connection Files already available, also the credentials already added.
+2. Login and Registration (including queries, validation, setting of session already available)
+3. MVC Framework already with #1 and 2. Of course any codes related to The Wall is not yet added. MVC FOLDERS ALREADY SETUP (MODELS, CONTROLLERS, VIEWS, HELPERS ETC, and OTHER CONFIGS No need to create from those scratch).
+4. No need for documentation / comments sa codes. One liner is enough if you want to add.
+5. About Copy PASTE, you are not allowed to copy codes from other code base, BUT its okay to Copy Paste Code na nacode niyo mismo during the recording.
+6. You will still use the debugger, but on cases that you think na mas mabilis mag console.log, do console.log. 
