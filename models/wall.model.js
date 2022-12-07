@@ -78,62 +78,24 @@ class Wall{
     /* The hardest part Combine message and comments with their respecitve user/authors in one query */
     getWallContent = async () => {
         let response_data = {status : false, result : {}, err : null};
-        let query = dbs.format(`
-                SELECT
-                    messages.id as messages_id, messages.user_id as messages_user_id, message, messages.created_at as messages_created_at,
-                    users.first_name as messages_first_name, users.last_name as messages_last_name,
-                    named_comments.id as comments_id, named_comments.user_id as comments_user_id, named_comments.comment, named_comments.first_name as comments_first_name, named_comments.last_name as comments_last_name, named_comments.created_at as comments_created_at
+        let query = dbs.DBconnection.format(`
+                SELECT JSON_OBJECT("messages_id", messages.id, "user_id", m_users.id, "message", message, "first_name", m_users.first_name, "last_name", m_users.last_name, "created_at", DATE_FORMAT(messages.created_at, "%M %D, %Y")) AS json_message,
+                    json_arrayagg(JSON_OBJECT("comments_id", named_comments.id, "user_id", named_comments.user_id, "first_name", named_comments.first_name, "last_name", named_comments.last_name, "created_at", DATE_FORMAT(named_comments.created_at, "%M %D, %Y"), "comment", named_comments.comment)) AS json_comments
                 FROM messages
-                INNER JOIN users ON users.id = messages.user_id
-                LEFT JOIN (
-                    SELECT c.id, c.user_id, c.message_id, c.comment, u.first_name, u.last_name, c.created_at
-                    FROM comments as c
-                    INNER JOIN users as u ON c.user_id = u.id
-                ) as named_comments ON messages.id = named_comments.message_id
-                ORDER BY messages_created_at DESC, comments_created_at ASC
-        `)
-
-        /* 
-            This is the only process I know that is linear in time complexity. The problem with JSON_OBJECT
-            at MYSQL is that it destroys the proper arrangement of order by (I can't sort it in mySQL) 
-        */
-        response_data = await dbs.DBconnection.executeQuery(query);
+                INNER JOIN users as m_users ON messages.user_id = m_users.id
+                LEFT JOIN 
+                (	SELECT comments.id, comments.message_id, comments.user_id, comments.comment, comments.created_at,
+                        c_users.first_name, c_users.last_name
+                    FROM comments 
+                    INNER JOIN users as c_users ON comments.user_id = c_users.id
+                ) AS named_comments ON messages.id = named_comments.message_id
+                GROUP BY messages.id
+                ORDER BY messages.created_at DESC, named_comments.created_at ASC;
+        `);
         
-        let fetched_contents = response_data.result;
-        let organized_content = [];
-        for(let key in fetched_contents){
-            let current_content = fetched_contents[key];
-            let comment_value = null;
-            if(current_content.comments_id !== null){
-                comment_value = {
-                    comments_id : current_content.comments_id,
-                    user_id : current_content.comments_user_id,
-                    first_name : current_content.comments_first_name,
-                    last_name : current_content.comments_last_name,
-                    comment : current_content.comment,
-                    created_at : this.dateFormatter(current_content.comments_created_at)
-                }
-            }
-            let oc_key = organized_content.length - 1;
-            if(key === "0" || current_content.messages_id !== organized_content[oc_key]["messages_id"]){
-                organized_content.push(
-                    {
-                        messages_id : current_content.messages_id,    
-                        user_id : current_content.messages_user_id,
-                        first_name : current_content.messages_first_name,
-                        last_name : current_content.messages_last_name,
-                        message : current_content.message,
-                        comments : [comment_value],
-                        created_at : this.dateFormatter(current_content.messages_created_at)
-                    }
-                )
-            }
-            else{
-                organized_content[oc_key]["comments"].push(comment_value);
-            }
-        }
-
-        return organized_content;
+        response_data = await dbs.DBconnection.executeQuery(query);
+ 
+        return response_data.result;
     }
 
     dateFormatter = (my_date) => {

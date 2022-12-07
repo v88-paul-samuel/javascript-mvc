@@ -1,4 +1,4 @@
-import Mysql from "mysql";
+import Mysql from "mysql2";
 import Constants from "../configs/constants.js";
 
 const DBconnection = Mysql.createPool(Constants.DATABASE);

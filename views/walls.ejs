@@ -25,30 +25,32 @@
                     <input type="submit" value="Post a message" />
                 </form>
             </div>
-<% for(let message of wallContent){ %>            
+<% for(let content of wallContent){ 
+        let message = content.json_message; %>              
             <div class="message">
                 <h3><%= message.first_name %> <%= message.last_name %> - <%= message.created_at %></h3>
-                <p><%= message["message"] %></p>
+                <p><%= message.message %></p>
 <%      if(message["user_id"] === user_details["id"]){ %>
                 <form action="/deleteMessage" method="POST">
-                    <input type="hidden" name="messages_id" value="<%= message["messages_id"] %>" />
+                    <input type="hidden" name="messages_id" value="<%= message.messages_id %>" />
                     <input type="submit" value="delete" />
                 </form>
 <%      } %>
-<%  if(message["comments"][0] !== null){
-        for(let comment of message["comments"]){ %>
+<%  if(content.json_comments[0].comment !== null){ 
+        for(let comment of content.json_comments){ %>
                 <div class="comment">
                     <h3><%= comment.first_name %> <%= comment.last_name %> - <%= comment.created_at %></h3>
                     <p><%= comment["comment"] %></p>
                 </div>
-<%          if(comment["user_id"] === user_details["id"]){ %>
+<%          if(comment.user_id === user_details["id"]){ %>
                 <form action="/deleteComment" method="POST">
                     <input type="hidden" name="comments_id" value="<%= comment["comments_id"] %>" />
                     <input type="submit" value="delete" />
                 </form>
 <%          } %>
 <%      }
-    } %> 
+    }
+     %> 
                 <div class="comment_poster">
                     <div class="comment_errors"></div>
                     <form action="/postComment" method="POST">
