@@ -97,27 +97,6 @@ class Wall{
  
         return response_data.result;
     }
-
-    dateFormatter = (my_date) => {
-        if(my_date === null){
-            return my_date;
-        }
-        let day = my_date.getDate();
-        if(day === 1){
-            day = `${day}st`;
-        }
-        else if(day === 2){
-            day = `${day}nd`;
-        }
-        else if(day === 3){
-            day = `${day}rd`;
-        }
-        else{
-            day = `${day}th`;
-        }
-
-        return `${this.months[my_date.getMonth()]} ${day} ${my_date.getFullYear()}`;
-    }
 }
 
 export default new Wall();
