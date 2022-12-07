@@ -17,7 +17,7 @@ class User{
     getOneUser = async ({email_address, password}) => {
         let response_data = {status: false, result: {}, err: null};
         let query = dbs.format(`
-                SELECT * 
+                SELECT id, first_name, last_name, email, password 
                 FROM users 
                 WHERE email = ?`, [email_address]
         );

@@ -98,6 +98,7 @@ class Wall{
             at MYSQL is that it destroys the proper arrangement of order by (I can't sort it in mySQL) 
         */
         response_data = await dbs.DBconnection.executeQuery(query);
+        
         let fetched_contents = response_data.result;
         let organized_content = [];
         for(let key in fetched_contents){
