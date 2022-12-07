@@ -80,7 +80,7 @@ class Wall{
         let response_data = {status : false, result : {}, err : null};
         let query = dbs.DBconnection.format(`
                 SELECT JSON_OBJECT("messages_id", messages.id, "user_id", m_users.id, "message", message, "first_name", m_users.first_name, "last_name", m_users.last_name, "created_at", DATE_FORMAT(messages.created_at, "%M %D, %Y")) AS json_message,
-                    json_arrayagg(JSON_OBJECT("comments_id", named_comments.id, "user_id", named_comments.user_id, "first_name", named_comments.first_name, "last_name", named_comments.last_name, "created_at", DATE_FORMAT(named_comments.created_at, "%M %D, %Y"), "comment", named_comments.comment)) AS json_comments
+                    JSON_ARRAYAGG(JSON_OBJECT("comments_id", named_comments.id, "user_id", named_comments.user_id, "first_name", named_comments.first_name, "last_name", named_comments.last_name, "created_at", DATE_FORMAT(named_comments.created_at, "%M %D, %Y"), "comment", named_comments.comment)) AS json_comments
                 FROM messages
                 INNER JOIN users as m_users ON messages.user_id = m_users.id
                 LEFT JOIN 
