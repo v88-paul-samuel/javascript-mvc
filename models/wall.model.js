@@ -63,16 +63,16 @@ class Wall{
         if(response_data.result[0].user_id !== user_id){
             return response_data.result;
         }
-
-        /* Delete the sub comments */
-        query = dbs.format(`DELETE FROM comments WHERE message_id = ?`, [message_id]);
-        response_data = await dbs.DBconnection.executeQuery(query);
-
-        /* Delete the message */
-        query = dbs.format(`DELETE FROM messages WHERE id = ?`, [message_id]);
-        response_data = await dbs.DBconnection.executeQuery(query);
         
-        return response_data.result;
+        /* Deletes the message along with its sub comments */
+        query = dbs.format(`
+                DELETE messages, comments
+                FROM messages 
+                LEFT JOIN comments ON messages.id = comments.message_id
+                WHERE messages.id = ?`, [message_id]
+        );
+
+        return await dbs.DBconnection.executeQuery(query);
     }
 
     /* The hardest part Combine message and comments with their respecitve user/authors in one query */
