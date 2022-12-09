@@ -8,7 +8,7 @@ constant.DATABASE = {
     password: "firaga123",
     database: "wall",
     connectionLimit: 50,
-    port: "3306"
+    port: "3308"
 }
 
 export default constant;
