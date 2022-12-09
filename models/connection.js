@@ -22,4 +22,4 @@ DBconnection.executeQuery = async (query) => {
     });
 }
 
-export default {DBconnection : DBconnection, 'format' : format};
+export default {executeQuery : DBconnection.executeQuery, "format" : format}

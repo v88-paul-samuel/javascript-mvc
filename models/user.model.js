@@ -1,6 +1,5 @@
-import md5 from "md5";
-import moment from "moment/moment.js";
-import dbs from "./connection.js";
+import Md5 from "Md5";
+import DBConnection from "./connection.js";
 
 /**
  * @class
@@ -16,15 +15,15 @@ class User{
      */
     getOneUser = async ({email_address, password}) => {
         let response_data = {status: false, result: {}, err: null};
-        let query = dbs.format(`
+        let query = DBConnection.format(`
                 SELECT id, first_name, last_name, email, password 
                 FROM users 
                 WHERE email = ?`, [email_address]
         );
         
-        response_data = await dbs.DBconnection.executeQuery(query);
+        response_data = await DBConnection.executeQuery(query);
         
-        if(md5(password) !== response_data.result[0]?.password){
+        if(Md5(password) !== response_data.result[0]?.password){
             return [];            
         }
 
@@ -40,18 +39,16 @@ class User{
      */
     addUser = async ({email_address, first_name, last_name, password}) => {
         let response_data = {status: false, result: {}, err: null};
-        let query = dbs.format(`
+        let query = DBConnection.format(`
                 INSERT users(first_name, last_name, email, password, created_at, updated_at) 
-                    VALUES(?,?,?,?,?,?)`, [
+                    VALUES(?,?,?,?, NOW(), NOW())`, [
                         first_name, 
                         last_name, 
                         email_address,
-                        md5(password),
-                        moment().format('YYYY-MM-DD HH:mm:ss'),
-                        moment().format('YYYY-MM-DD HH:mm:ss')
+                        Md5(password),                    
                     ]);
-        
-        response_data = await dbs.DBconnection.executeQuery(query)
+
+        response_data = await DBConnection.executeQuery(query)
 
         return response_data.result;      
     }
@@ -80,12 +77,13 @@ class User{
      */
     hasEmail = async (email) => {
         let response_data = {status: false, result: {}, err: null};
-        let query = dbs.format(`
+        let query = DBConnection.format(`
                 SELECT COUNT(id) as number 
                 FROM users 
                 WHERE email = ?`, [email]);
 
-        response_data = await dbs.DBconnection.executeQuery(query);
+        response_data = await DBConnection.executeQuery(query);
+        
         return response_data.result[0]["number"] === 0;
     }
 

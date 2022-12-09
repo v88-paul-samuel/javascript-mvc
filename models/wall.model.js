@@ -1,91 +1,100 @@
-import moment from "moment/moment.js";
-import dbs from "./connection.js";
+import DBConnection from "./connection.js";
 
 class Wall{
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     createMessage = async(user_id, message) => {
-        let response_data = {status : false, result : {}, err : null}
-        let query = dbs.format(`
+        let response_data = {status : false, result : {}, error : null}
+        let query = DBConnection.format(`
             INSERT messages(user_id, message, created_at, updated_at)
-                VALUES(?,?,?,?)`, [
+                VALUES(?,?, NOW(), NOW())`, [
                     user_id, 
-                    message, 
-                    moment().format("YYYY-MM-DD HH:mm:ss"),
-                    moment().format("YYYY-MM-DD HH:mm:ss")
-                ]
-        )
+                    message,                     
+                ]);
+    
+        response_data = await DBConnection.executeQuery(query);
         
-        response_data = await dbs.DBconnection.executeQuery(query);
+        if(response_data.result.affectedRows === 0){
+            response_data.status = false;
+            response_data.error = "<p>Message not sent! Something went wrong</p>";
+        }
 
-        return response_data.result;
+        return response_data;
     }
 
     createComment = async(user_id, message_id, comment) => {
-        let response_data = {status : false, result : {}, err :null}
-        let query = dbs.format(`
+        let response_data = {status : false, result : {}, error :null}
+        let query = DBConnection.format(`
             INSERT comments(message_id, user_id, comment, created_at, updated_at)
-                VALUES(?,?,?,?,?)`, [
+                VALUES(?,?,?, NOW(), NOW())`, [
                     message_id,
                     user_id,
                     comment,
-                    moment().format("YYYY-MM-DD HH:mm:ss"),
-                    moment().format("YYYY-MM-DD HH:mm:ss")
-                ]
-        )
-        response_data = await dbs.DBconnection.executeQuery(query);
+                ])
 
-        return response_data.result;
+        response_data = await DBConnection.executeQuery(query);
+
+        if(response_data.result.affectedRows === 0){
+            response_data.status = false;
+            response_data.error = "<p>Message not sent! Something went wrong</p>";
+        }
+        
+        return response_data;
     };
 
     deleteComment = async(user_id, comment_id) => {
-        let response_data = {status : false, result : {}, err :null}
+        let response_data = {status : false, result : {}, error :null}
 
-        /* Server side security check */
-        let query = dbs.format(`SELECT user_id FROM comments WHERE id = ?`, [comment_id]);
-        response_data = await dbs.DBconnection.executeQuery(query);
-        if(response_data.result[0].user_id !== user_id){
-            return response_data.result;
+        let query = DBConnection.format(`
+            DELETE 
+            FROM comments 
+            WHERE id = ? AND user_id = ?`, [comment_id, user_id]);
+        response_data = await DBConnection.executeQuery(query);
+        
+        if(response_data.result.affectedRows === 0){
+            response_data.status = false;
+            response_data.error = "<p>Something went wrong!</p>";
         }
 
-        query = dbs.format(`DELETE FROM comments WHERE id = ?`, [comment_id]);
-        response_data = await dbs.DBconnection.executeQuery(query);
-
-        return response_data.result;
+        return response_data;
     }
 
     deleteMessage = async(user_id, message_id) => {
         let response_data = {status : false, result : {}, err :null}
 
-        /* Server side security check */
-        let query = dbs.format(`SELECT user_id FROM messages WHERE id = ?`, [message_id]);
-        response_data = await dbs.DBconnection.executeQuery(query);
-        if(response_data.result[0].user_id !== user_id){
-            return response_data.result;
-        }
-        
         /* Deletes the message along with its sub comments */
-        query = dbs.format(`
-                DELETE messages, comments
-                FROM messages 
-                LEFT JOIN comments ON messages.id = comments.message_id
-                WHERE messages.id = ?`, [message_id]
+        let query = DBConnection.format(`
+            DELETE messages
+            FROM messages 
+            WHERE messages.id = ? AND user_id = ?`, [message_id, user_id]
         );
 
-        return await dbs.DBconnection.executeQuery(query);
+        response_data = await DBConnection.executeQuery(query);
+        
+        if(response_data.result.affectedRows === 0){
+            response_data.status = false;
+            response_data.error = "<p>Something went wrong!</p>";
+        }
+
+        return response_data;
     }
 
     /* The hardest part Combine message and comments with their respecitve user/authors in one query */
     getWallContent = async () => {
-        let response_data = {status : false, result : {}, err : null};
-        let query = dbs.DBconnection.format(`
-                SELECT JSON_OBJECT("messages_id", messages.id, "user_id", m_users.id, "message", message, "first_name", m_users.first_name, "last_name", m_users.last_name, "created_at", DATE_FORMAT(messages.created_at, "%M %D, %Y")) AS json_message,
-                    JSON_ARRAYAGG(JSON_OBJECT("comments_id", named_comments.id, "user_id", named_comments.user_id, "first_name", named_comments.first_name, "last_name", named_comments.last_name, "created_at", DATE_FORMAT(named_comments.created_at, "%M %D, %Y"), "comment", named_comments.comment)) AS json_comments
+        let response_data = {status : false, result : {}, error : null};
+        let query = DBConnection.format(`
+                SELECT JSON_OBJECT(
+                                    "messages_id", messages.id, "message", message, "created_at", DATE_FORMAT(messages.created_at, "%M %D, %Y"),
+                                    "user_id", m_users.id, "first_name", m_users.first_name, "last_name", m_users.last_name) AS json_message,
+                    JSON_ARRAYAGG(JSON_OBJECT(
+                                                "comments_id", named_comments.id, "comment", named_comments.comment, "created_at", DATE_FORMAT(named_comments.created_at, "%M %D, %Y"), 
+                                                "user_id", named_comments.user_id, "first_name", named_comments.first_name, "last_name", named_comments.last_name)) AS json_comments
                 FROM messages
                 INNER JOIN users as m_users ON messages.user_id = m_users.id
                 LEFT JOIN 
-                (	SELECT comments.id, comments.message_id, comments.user_id, comments.comment, comments.created_at,
-                        c_users.first_name, c_users.last_name
+                (	SELECT 
+                            comments.id, comments.message_id, comments.user_id, comments.comment, comments.created_at,
+                            c_users.first_name, c_users.last_name
                     FROM comments 
                     INNER JOIN users as c_users ON comments.user_id = c_users.id
                 ) AS named_comments ON messages.id = named_comments.message_id
@@ -93,7 +102,7 @@ class Wall{
                 ORDER BY messages.created_at DESC, named_comments.created_at ASC;
         `);
         
-        response_data = await dbs.DBconnection.executeQuery(query);
+        response_data = await DBConnection.executeQuery(query);
  
         return response_data.result;
     }

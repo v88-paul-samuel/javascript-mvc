@@ -20,7 +20,7 @@
             <div id="main_poster">
                 <h1>Post a message</h1>
                 <div class="message_errors"></div>
-                <form action="/postMessage" action="POST">
+                <form action="/postMessage" action="POST" id="post_message">
                     <textarea name="message" placeholder="Insert message here"></textarea>
                     <input type="submit" value="Post a message" />
                 </form>
@@ -31,7 +31,8 @@
                 <h3><%= message.first_name %> <%= message.last_name %> - <%= message.created_at %></h3>
                 <p><%= message.message %></p>
 <%      if(message["user_id"] === user_details["id"]){ %>
-                <form action="/deleteMessage" method="POST">
+                <div class="delete_errors"></div>
+                <form action="/deleteMessage" method="POST" class="delete_message">
                     <input type="hidden" name="messages_id" value="<%= message.messages_id %>" />
                     <input type="submit" value="delete" />
                 </form>
@@ -43,17 +44,20 @@
                     <p><%= comment["comment"] %></p>
                 </div>
 <%          if(comment.user_id === user_details["id"]){ %>
-                <form action="/deleteComment" method="POST">
-                    <input type="hidden" name="comments_id" value="<%= comment["comments_id"] %>" />
-                    <input type="submit" value="delete" />
-                </form>
+                <div>
+                    <div class="delete_errors"></div>
+                    <form action="/deleteComment" method="POST" class="delete_comment">
+                        <input type="hidden" name="comments_id" value="<%= comment["comments_id"] %>" />
+                        <input type="submit" value="delete" />
+                    </form>
+                </div>
 <%          } %>
 <%      }
     }
      %> 
                 <div class="comment_poster">
                     <div class="comment_errors"></div>
-                    <form action="/postComment" method="POST">
+                    <form action="/postComment" method="POST" class="post_comment">
                         <input type="hidden" name="message_id" value="<%= message["messages_id"] %>" />
                         <textarea name="comment" placeholder="Insert comment here"></textarea>
                         <input type="submit" value="Post a comment">                    

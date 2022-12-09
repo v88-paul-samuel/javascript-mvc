@@ -1,4 +1,4 @@
-.message_errors p, .comment_errors p{
+.message_errors p, .comment_errors p, .delete_errors p{
     color: red;
 }
 header{

@@ -1,7 +1,7 @@
 const Helper = {};
 
 Helper.checkFields = (required_fields, req_body) => {
-    let response_data = { status: true, result: {}, error: null };
+    let response_data = { status: false, result: {}, error: null };
 
     try{
         let sanitized_data = {};
@@ -34,4 +34,4 @@ Helper.checkFields = (required_fields, req_body) => {
     return response_data;
 }
 
-module.exports = Helper;
+export default {checkFields : Helper.checkFields} 
