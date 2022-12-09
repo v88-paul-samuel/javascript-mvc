@@ -14,9 +14,9 @@ export default {
         body("password").trim().isLength({min:3}).withMessage("Password is minimum of 3 characters").escape()
     ],
     post_message: [
-        body("message").trim().notEmpty().withMessage("Messages must not be empty or blank spaces")
+        body("message").trim().notEmpty().withMessage("Messages must not be empty or blank spaces").escape()
     ],
     post_comment: [
-        body("comment").trim().notEmpty().withMessage("Comments must not be empty or blank spaces")
+        body("comment").trim().notEmpty().withMessage("Comments must not be empty or blank spaces").escape()
     ]
 };
