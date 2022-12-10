@@ -104,7 +104,7 @@ class Wall{
         
         response_data = await DBConnection.executeQuery(query);
  
-        return response_data.result;
+        return response_data;
     }
 }
 
