@@ -31,13 +31,7 @@ class Walls{
 
         let response_create_post = await WallModel.createMessage(this.#req.session.user["id"], response_check_fields.result["message"]);
         
-        if(!response_create_post.status){
-            this.#res.json(response_create_post);
-            
-            return
-        }
-
-        this.#res.json({});
+        this.#res.json(response_create_post);
     }
 
     postComment = async () => {
@@ -52,15 +46,8 @@ class Walls{
 
         let sanitized_posts = response_check_fields.result;
         let response_create_comment = await WallModel.createComment(this.#req.session.user["id"], sanitized_posts["message_id"], sanitized_posts["comment"]);
-        
-        if(!response_create_comment.status){
-            this.#res.json(response_create_comment);
-            
-            return;            
-        }
-        
-        this.#res.json({});
-        
+                
+        this.#res.json(response_create_comment);
     }
 
     deleteComment = async () => {
@@ -68,7 +55,6 @@ class Walls{
         let response_check_fields = Helper.checkFields(["comments_id"], this.#req.body);    
         
         if(!response_check_fields.status){
-            response_check_fields.error = `<p>${response_check_fields.error}</p>`; 
             this.#res.json(response_check_fields);
             
             return;
@@ -76,13 +62,7 @@ class Walls{
         
         let response_data = await WallModel.deleteComment(this.#req.session.user["id"], response_check_fields.result["comments_id"])
         
-        if(!response_data.status){
-            this.#res.json(response_data);
-            
-            return;
-        }
-
-        this.#res.json({});
+        this.#res.json(response_data);
     }
 
     deleteMessage = async () => {
@@ -90,21 +70,14 @@ class Walls{
         let response_check_fields = Helper.checkFields(["messages_id"], this.#req.body);    
         
         if(!response_check_fields.status){
-            response_check_fields.error = `<p>${response_check_fields.error}</p>`; 
             this.#res.json(response_check_fields);
             
             return;
         }  
         
         let response_data = await WallModel.deleteMessage(this.#req.session.user["id"], response_check_fields.result["messages_id"])
-        
-        if(!response_data.status){
-            this.#res.json(response_data);
-            
-            return;
-        }
 
-        this.#res.json({errors : response_data.err});
+        this.#res.json(response_data);
     }
 }
 

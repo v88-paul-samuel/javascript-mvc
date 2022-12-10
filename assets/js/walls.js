@@ -2,7 +2,7 @@ $(document).ready(function(){
     $("#post_message").submit(function(){
         let form = $(this);
         $.post(form.attr("action"), form.serialize(), (data) => {
-            if(!data.status && data.error !== undefined){
+            if(!data.status){
                 form.siblings(".message_errors").html(data.error);
             }
             else{
@@ -15,7 +15,7 @@ $(document).ready(function(){
     $(".post_comment").submit(function(){
         let form = $(this);
         $.post(form.attr("action"), form.serialize(), (data) => {
-            if(!data.status && data.error !== undefined){
+            if(!data.status){
                 form.siblings(".comment_errors").html(data.error);
             }
             else{
@@ -28,7 +28,7 @@ $(document).ready(function(){
     $(".delete_message").submit(function(){
         let form = $(this);
         $.post(form.attr("action"), form.serialize(), (data) => {
-            if(!data.status && data.error !== undefined){
+            if(!data.status){
                 form.siblings(".delete_errors").html(data.error);                
             }
             else{
@@ -41,7 +41,7 @@ $(document).ready(function(){
     $(".delete_comment").submit(function(){
         let form = $(this);
         $.post(form.attr("action"), form.serialize(), (data) => {
-            if(!data.status && data.error !== undefined){
+            if(!data.status){
                 form.siblings(".delete_errors").html(data.error);                
             }
             else{
