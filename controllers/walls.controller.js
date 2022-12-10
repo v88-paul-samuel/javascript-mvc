@@ -5,12 +5,10 @@ import WallModel from "../models/wall.model.js";
 class Walls{
     #req;
     #res;
-    #is_logged_out;
 
     constructor(req, res){
         this.#req = req;
         this.#res = res;
-        this.#is_logged_out = this.#req.session.user === undefined;
 
         if(this.#req.session && this.#req.session.user !== undefined){
 
