@@ -3,14 +3,16 @@ import WallModel from "../models/wall.model.js";
 class ViewController {
     #req;
     #res;
+    #user;
     
     constructor(req, res){
         this.#req = req;
         this.#res = res;
+        this.#user = this.#req.session.user;
     }
 
     homepage = async () => {    
-        if(this.#req.session.user !== undefined){
+        if(this.#user !== undefined){
             this.#res.redirect("/wall")
         }
         else{
@@ -19,17 +21,16 @@ class ViewController {
     }
 
     wall = async () => {
-        let user_details = this.#req.session.user
-
-        if(user_details === undefined){
+        if(this.#user === undefined){
             this.#res.redirect("/homepage");
             
             return;
         }
 
-        let wallContent = await WallModel.getWallContent();
+        /* response_ prefix on variables means it contains the ff. {status : bool, result : {}, error : string/null}  */
+        let response_data = await WallModel.getWallContent();
 
-        this.#res.render("walls.ejs", {wallContent, user_details});
+        this.#res.render("walls.ejs", {wallContent : response_data.result, user_details : this.#user});
     }
 }
 
