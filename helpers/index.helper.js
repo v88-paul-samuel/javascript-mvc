@@ -20,7 +20,7 @@ Helper.checkFields = (required_fields, req_body) => {
 
         if(missing_fields.length){
             response_data.result = { missing_fields };
-            response_data.error  = "There are missing/blank fields."
+            response_data.error  = "<p>There are missing/blank fields.</p>"
         }
         else{
             response_data.status = true;

@@ -11,47 +11,43 @@ class Walls{
         this.#req = req;
         this.#res = res;
         this.#is_logged_out = this.#req.session.user === undefined;
+
+        if(this.#req.session && this.#req.session.user !== undefined){
+
+        }
+        else{
+            throw new Error("<p>You must be logged in to use this feature</p>");
+        }
+
     }
 
-    postMessage = async () => {
-        if(this.#is_logged_out){
-            this.#res.json({errors : "<p>You must be logged in to use this feature</p>"});
-            
-            return;
-        }
-        
+    postMessage = async () => {        
         /* response_ prefix on variables means it contains the ff. {status : bool, result : {}, error : string/null}  */
         let response_check_fields = Helper.checkFields(["message"], this.#req.body)
 
         if(!response_check_fields.status){
-            this.#res.json({errors : `<p>${response_check_fields.error}</p>`});
-            
-            return;
+            this.#res.json(response_check_fields); 
+
+            return
         }   
 
         let response_create_post = await WallModel.createMessage(this.#req.session.user["id"], response_check_fields.result["message"]);
         
         if(!response_create_post.status){
-            this.#res.json({errors : `<p>${response_create_post.error}</p>`});
+            this.#res.json(response_create_post);
             
-            return;
+            return
         }
 
         this.#res.json({});
     }
 
     postComment = async () => {
-        if(this.#is_logged_out){
-            this.#res.json({errors : "<p>You must be logged in to use this feature</p>"});
-            
-            return;
-        }
-
         /* response_ prefix on variables means it contains the ff. {status : bool, result : {}, error : string/null}  */
         let response_check_fields = Helper.checkFields(["message_id", "comment"], this.#req.body);
 
         if(!response_check_fields.status){
-            this.#res.json({errors : `<p>${response_check_fields.error}</p>`});
+            this.#res.json(response_check_fields);
             
             return;
         }   
@@ -60,7 +56,7 @@ class Walls{
         let response_create_comment = await WallModel.createComment(this.#req.session.user["id"], sanitized_posts["message_id"], sanitized_posts["comment"]);
         
         if(!response_create_comment.status){
-            this.#res.json({errors : `<p>${response_create_comment.error}</p>`});
+            this.#res.json(response_create_comment);
             
             return;            
         }
@@ -70,25 +66,20 @@ class Walls{
     }
 
     deleteComment = async () => {
-        if(this.#is_logged_out){
-            this.#res.json({errors : "<p>You must be logged in to use this feature</p>"});
-            
-            return;
-        }
-
         /* response_ prefix on variables means it contains the ff. {status : bool, result : {}, error : string/null}  */
         let response_check_fields = Helper.checkFields(["comments_id"], this.#req.body);    
         
         if(!response_check_fields.status){
-            this.#res.json({errors : `<p>${response_check_fields.error}</p>`});
+            response_check_fields.error = `<p>${response_check_fields.error}</p>`; 
+            this.#res.json(response_check_fields);
             
             return;
-        }   
+        }  
         
         let response_data = await WallModel.deleteComment(this.#req.session.user["id"], response_check_fields.result["comments_id"])
         
         if(!response_data.status){
-            this.#res.json({errors : response_data.error});
+            this.#res.json(response_data);
             
             return;
         }
@@ -97,25 +88,20 @@ class Walls{
     }
 
     deleteMessage = async () => {
-        if(this.#is_logged_out){
-            this.#res.json({errors : "<p>You must be logged in to use this feature</p>"});
-            
-            return;
-        }
-
         /* response_ prefix on variables means it contains the ff. {status : bool, result : {}, error : string/null}  */
         let response_check_fields = Helper.checkFields(["messages_id"], this.#req.body);    
         
         if(!response_check_fields.status){
-            this.#res.json({errors : `<p>${response_check_fields.error}</p>`});
+            response_check_fields.error = `<p>${response_check_fields.error}</p>`; 
+            this.#res.json(response_check_fields);
             
             return;
-        }   
+        }  
         
         let response_data = await WallModel.deleteMessage(this.#req.session.user["id"], response_check_fields.result["messages_id"])
         
         if(!response_data.status){
-            this.#res.json({errors : response_data.error});
+            this.#res.json(response_data);
             
             return;
         }

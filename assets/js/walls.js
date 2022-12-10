@@ -2,8 +2,8 @@ $(document).ready(function(){
     $("#post_message").submit(function(){
         let form = $(this);
         $.post(form.attr("action"), form.serialize(), (data) => {
-            if(data.errors !== undefined){
-                form.siblings(".message_errors").html(data.errors);
+            if(!data.status && data.error !== undefined){
+                form.siblings(".message_errors").html(data.error);
             }
             else{
                 window.location.reload();
@@ -15,8 +15,8 @@ $(document).ready(function(){
     $(".post_comment").submit(function(){
         let form = $(this);
         $.post(form.attr("action"), form.serialize(), (data) => {
-            if(data.errors !== undefined){
-                form.siblings(".comment_errors").html(data.errors);
+            if(!data.status && data.error !== undefined){
+                form.siblings(".comment_errors").html(data.error);
             }
             else{
                 window.location.reload();
@@ -28,8 +28,8 @@ $(document).ready(function(){
     $(".delete_message").submit(function(){
         let form = $(this);
         $.post(form.attr("action"), form.serialize(), (data) => {
-            if(data.errors !== undefined){
-                form.siblings(".delete_errors").html(data.errors);                
+            if(!data.status && data.error !== undefined){
+                form.siblings(".delete_errors").html(data.error);                
             }
             else{
                 window.location.reload();
@@ -41,8 +41,8 @@ $(document).ready(function(){
     $(".delete_comment").submit(function(){
         let form = $(this);
         $.post(form.attr("action"), form.serialize(), (data) => {
-            if(data.errors !== undefined){
-                form.siblings(".delete_errors").html(data.errors);                
+            if(!data.status && data.error !== undefined){
+                form.siblings(".delete_errors").html(data.error);                
             }
             else{
                 window.location.reload();
