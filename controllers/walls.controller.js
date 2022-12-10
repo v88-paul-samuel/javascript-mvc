@@ -1,4 +1,3 @@
-import { validationResult } from "express-validator";
 import  Helper  from "../helpers/index.helper.js";
 import WallModel from "../models/wall.model.js";
 
