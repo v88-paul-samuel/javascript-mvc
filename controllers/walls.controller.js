@@ -5,13 +5,14 @@ import WallModel from "../models/wall.model.js";
 class Walls{
     #req;
     #res;
+    #user;
 
     constructor(req, res){
         this.#req = req;
         this.#res = res;
 
         if(this.#req.session && this.#req.session.user !== undefined){
-
+            this.#user = this.#req.session.user;
         }
         else{
             throw new Error("<p>You must be logged in to use this feature</p>");
@@ -29,7 +30,7 @@ class Walls{
             return
         }   
 
-        let response_create_post = await WallModel.createMessage(this.#req.session.user["id"], response_check_fields.result["message"]);
+        let response_create_post = await WallModel.createMessage(this.#user["id"], response_check_fields.result["message"]);
         
         this.#res.json(response_create_post);
     }
@@ -45,7 +46,7 @@ class Walls{
         }   
 
         let sanitized_posts = response_check_fields.result;
-        let response_create_comment = await WallModel.createComment(this.#req.session.user["id"], sanitized_posts["message_id"], sanitized_posts["comment"]);
+        let response_create_comment = await WallModel.createComment(this.#user["id"], sanitized_posts["message_id"], sanitized_posts["comment"]);
                 
         this.#res.json(response_create_comment);
     }
@@ -60,7 +61,7 @@ class Walls{
             return;
         }  
         
-        let response_data = await WallModel.deleteComment(this.#req.session.user["id"], response_check_fields.result["comments_id"])
+        let response_data = await WallModel.deleteComment(this.#user["id"], response_check_fields.result["comments_id"])
         
         this.#res.json(response_data);
     }
@@ -75,7 +76,7 @@ class Walls{
             return;
         }  
         
-        let response_data = await WallModel.deleteMessage(this.#req.session.user["id"], response_check_fields.result["messages_id"])
+        let response_data = await WallModel.deleteMessage(this.#user["id"], response_check_fields.result["messages_id"])
 
         this.#res.json(response_data);
     }
