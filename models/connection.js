@@ -1,4 +1,4 @@
-import Mysql from "mysql";
+import Mysql from "mysql2";
 import Constants from "../configs/constants.js";
 
 const DBconnection = Mysql.createPool(Constants.DATABASE);
@@ -22,4 +22,4 @@ DBconnection.executeQuery = async (query) => {
     });
 }
 
-export default {DBconnection : DBconnection, 'format' : format};
+export default {executeQuery : DBconnection.executeQuery, "format" : format}

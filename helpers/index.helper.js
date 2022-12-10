@@ -1,7 +1,7 @@
 const Helper = {};
 
 Helper.checkFields = (required_fields, req_body) => {
-    let response_data = { status: true, result: {}, error: null };
+    let response_data = { status: false, result: {}, error: null };
 
     try{
         let sanitized_data = {};
@@ -20,7 +20,7 @@ Helper.checkFields = (required_fields, req_body) => {
 
         if(missing_fields.length){
             response_data.result = { missing_fields };
-            response_data.error  = "There are missing/blank fields."
+            response_data.error  = "<p>There are missing/blank fields.</p>"
         }
         else{
             response_data.status = true;
@@ -34,4 +34,4 @@ Helper.checkFields = (required_fields, req_body) => {
     return response_data;
 }
 
-module.exports = Helper;
+export default {checkFields : Helper.checkFields} 

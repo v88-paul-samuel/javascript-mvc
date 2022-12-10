@@ -20,7 +20,7 @@ $(document).ready( () => {
                 $("#register_errors").html(data.error_list);
             }
             else{
-                location.reload();
+                window.location.reload();
             }
         }, "json");
 
