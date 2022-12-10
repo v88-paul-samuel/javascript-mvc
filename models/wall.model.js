@@ -62,7 +62,6 @@ class Wall{
     deleteMessage = async(user_id, message_id) => {
         let response_data = {status : false, result : {}, err :null}
 
-        /* Deletes the message along with its sub comments */
         let query = DBConnection.format(`
             DELETE messages
             FROM messages 
@@ -82,6 +81,7 @@ class Wall{
     /* The hardest part Combine message and comments with their respecitve user/authors in one query */
     getWallContent = async () => {
         let response_data = {status : false, result : {}, error : null};
+        /* Gets two columns: json object of message detais and json object of comments details */
         let query = DBConnection.format(`
                 SELECT JSON_OBJECT(
                                     "messages_id", messages.id, "message", message, "created_at", DATE_FORMAT(messages.created_at, "%M %D, %Y"),
