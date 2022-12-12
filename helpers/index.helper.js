@@ -34,4 +34,4 @@ Helper.checkFields = (required_fields, req_body) => {
     return response_data;
 }
 
-module.exports = Helper;
+export default Helper;
