@@ -83,23 +83,21 @@ class Wall{
         let response_data = {status : false, result : {}, error : null};
         /* Gets two columns: json object of message detais and json object of comments details */
         let query = DBConnection.format(`
-                SELECT JSON_OBJECT(
-                                    "messages_id", messages.id, "message", message, "created_at", DATE_FORMAT(messages.created_at, "%M %D, %Y"),
-                                    "user_id", m_users.id, "first_name", m_users.first_name, "last_name", m_users.last_name) AS json_message,
-                    JSON_ARRAYAGG(JSON_OBJECT(
-                                                "comments_id", named_comments.id, "comment", named_comments.comment, "created_at", DATE_FORMAT(named_comments.created_at, "%M %D, %Y"), 
-                                                "user_id", named_comments.user_id, "first_name", named_comments.first_name, "last_name", named_comments.last_name)) AS json_comments
-                FROM messages
-                INNER JOIN users as m_users ON messages.user_id = m_users.id
-                LEFT JOIN 
-                (	SELECT 
-                            comments.id, comments.message_id, comments.user_id, comments.comment, comments.created_at,
-                            c_users.first_name, c_users.last_name
+        SELECT JSON_OBJECT(
+            "messages_id", messages.id, "message", message, "created_at", DATE_FORMAT(messages.created_at, "%M %D, %Y"),
+            "user_id", m_users.id, "first_name", m_users.first_name, "last_name", m_users.last_name) AS json_message,			
+                (
+                SELECT JSON_OBJECTAGG(comments.id, JSON_OBJECT(
+                    "comments_id", comments.id, "comment", comments.comment, "created_at", DATE_FORMAT(comments.created_at, "%M %D, %Y"), 
+                    "user_id", comments.user_id, "first_name", c_users.first_name, "last_name", c_users.last_name))
                     FROM comments 
-                    INNER JOIN users as c_users ON comments.user_id = c_users.id
-                ) AS named_comments ON messages.id = named_comments.message_id
-                GROUP BY messages.id
-                ORDER BY messages.created_at DESC, named_comments.created_at ASC;
+                    INNER JOIN users as c_users ON comments.user_id = c_users.id 
+                    WHERE comments.message_id = messages.id
+                ) AS json_comments 
+            FROM messages
+            INNER JOIN users as m_users ON messages.user_id = m_users.id
+            GROUP BY messages.id
+            ORDER BY messages.created_at DESC;
         `);
         
         response_data = await DBConnection.executeQuery(query);

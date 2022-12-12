@@ -37,8 +37,9 @@
                     <input type="submit" value="delete" />
                 </form>
 <%      } %>
-<%  if(content.json_comments[0].comment !== null){ 
-        for(let comment of content.json_comments){ %>
+<%  if(true){ 
+        for(let key in content.json_comments){ 
+            let comment = content.json_comments[key] %>
                 <div class="comment">
                     <h3><%= comment.first_name %> <%= comment.last_name %> - <%= comment.created_at %></h3>
                     <p><%= comment["comment"] %></p>
