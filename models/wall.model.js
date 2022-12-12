@@ -94,10 +94,10 @@ class Wall{
                             INNER JOIN users as c_users ON comments.user_id = c_users.id 
                             WHERE comments.message_id = messages.id
                     ) AS json_comments 
-                FROM messages
-                INNER JOIN users as m_users ON messages.user_id = m_users.id
-                GROUP BY messages.id
-                ORDER BY messages.created_at DESC;
+            FROM messages
+            INNER JOIN users as m_users ON messages.user_id = m_users.id
+            GROUP BY messages.id
+            ORDER BY messages.created_at DESC;
         `);
         
         response_data = await DBConnection.executeQuery(query);
