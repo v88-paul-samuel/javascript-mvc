@@ -37,8 +37,7 @@
                     <input type="submit" value="delete" />
                 </form>
 <%      } %>
-<%  if(true){ 
-        for(let key in content.json_comments){ 
+<%      for(let key in content.json_comments){ 
             let comment = content.json_comments[key] %>
                 <div class="comment">
                     <h3><%= comment.first_name %> <%= comment.last_name %> - <%= comment.created_at %></h3>
@@ -53,9 +52,7 @@
                     </form>
                 </div>
 <%          } %>
-<%      }
-    }
-     %> 
+<%      } %> 
                 <div class="comment_poster">
                     <div class="comment_errors"></div>
                     <form action="/postComment" method="POST" class="post_comment">
