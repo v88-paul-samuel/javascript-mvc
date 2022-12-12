@@ -8,12 +8,7 @@ class ViewController {
     }
 
     homepage = async () => {    
-        if(this.#req.session.user !== undefined){
-            this.#res.redirect("/wall")
-        }
-        else{
-            this.#res.render("login.ejs");
-        }
+        this.#res.render("login.ejs");
     }
 }
 
